@@ -10,6 +10,7 @@ String? _color;
 String? _errorPrint;
 String? _lang;
 String? _size;
+String? _domain;
 
 WebViewController? _currentController;
 
@@ -21,6 +22,7 @@ class Arcaptcha {
     String? errorPrint,
     String? lang,
     String? size,
+    String? domain,
   }) {
     _siteKey = siteKey;
     _theme = theme;
@@ -28,6 +30,7 @@ class Arcaptcha {
     _errorPrint = errorPrint;
     _lang = lang;
     _size = size;
+    _domain = domain ?? 'localhost';
   }
 
   static Future<String?> show(
@@ -72,7 +75,7 @@ class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
       <html>
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <script src="https://widget.arcaptcha.ir/1/api.js?domain=localhost" async defer></script>
+          <script src="https://widget.arcaptcha.ir/1/api.js?domain=${_domain}" async defer></script>
         </head>
         <body>
 
