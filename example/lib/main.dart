@@ -1,63 +1,61 @@
-// import 'package:flutter/material.dart';
-// import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:arcaptcha/arcaptcha.dart';
 
-// import 'package:flutter/services.dart';
-// import 'package:arcaptcha/arcaptcha.dart';
+void main() {
+  runApp(const MyApp());
+}
 
-// void main() {
-//   runApp(const MyApp());
-// }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-// class MyApp extends StatefulWidget {
-//   const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Arcaptcha Demo',
+      home: const ArcaptchaHome(),
+    );
+  }
+}
 
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
+class ArcaptchaHome extends StatelessWidget {
+  const ArcaptchaHome({super.key});
 
-// class _MyAppState extends State<MyApp> {
-//   String _platformVersion = 'Unknown';
-//   final _arcaptchaPlugin = Arcaptcha();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Arcaptcha Example')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            Arcaptcha.init(
+              siteKey: 'qh7aotm3n8',
+              theme: 'dark',
+              lang: 'en',
+              // color: 'red',
+              size: 'invisible'
+            );
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     initPlatformState();
-//   }
-
-//   // Platform messages are asynchronous, so we initialize in an async method.
-//   Future<void> initPlatformState() async {
-//     String platformVersion;
-//     // Platform messages may fail, so we use a try/catch PlatformException.
-//     // We also handle the message potentially returning null.
-//     try {
-//       platformVersion =
-//           await _arcaptchaPlugin.getPlatformVersion() ?? 'Unknown platform version';
-//     } on PlatformException {
-//       platformVersion = 'Failed to get platform version.';
-//     }
-
-//     // If the widget was removed from the tree while the asynchronous platform
-//     // message was in flight, we want to discard the reply rather than calling
-//     // setState to update our non-existent appearance.
-//     if (!mounted) return;
-
-//     setState(() {
-//       _platformVersion = platformVersion;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Plugin example app'),
-//         ),
-//         body: Center(
-//           child: Text('Running on: $_platformVersion\n'),
-//         ),
-//       ),
-//     );
-//   }
-// }
+            final result = await Arcaptcha.show(context);
+            print('CAPTCHA result: $result');
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('CAPTCHA Token'),
+                  content: Text(result ?? 'No token received'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+          child: const Text('Verify Captcha'),
+        ),
+      ),
+    );
+  }
+}
