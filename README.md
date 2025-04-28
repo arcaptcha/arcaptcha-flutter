@@ -1,6 +1,6 @@
-# Arcaptcha Flutter Plugin
+# ARCaptcha Flutter Plugin
 
-Arcaptcha is a Flutter plugin which allows you to integrate the Arcaptcha widget into your Flutter app, which offers a secure and effective way of verifying users. With this plugin, you can display a CAPTCHA for verification, either in visible or invisible modes, and handle the successful verification or error states. This plugin provides flexibility to customize the appearance and behavior of the CAPTCHA widget directly from your Flutter app.
+This is ARCaptcha Flutter plugin which allows you to integrate the ARCaptcha widget into your Flutter app, which offers a secure and effective way of verifying users. With this plugin, you can display a CAPTCHA for verification, either in visible or invisible modes, and handle the successful verification or error states. This plugin provides flexibility to customize the appearance and behavior of the CAPTCHA widget directly from your Flutter app.
 
 ## Getting Started
 
@@ -16,13 +16,18 @@ To use the `arcaptcha` plugin in your Flutter project, follow these steps:
         git:
             url: https://github.com/arcaptcha/arcaptcha-flutter.git
 
-2. **Initialize Arcaptcha**<br>
-    Before using the Arcaptcha widget, you must import it and then initialize it with your **site key** and optionally customize its settings such as theme, size, color and language.
+2. **Initialize ARCaptcha**<br>
+    First, fetch the project dependencies by running:
+    ```bash
+    flutter pub get
+    ```
+    Before using the ARCaptcha widget, you need to import the package and initialize it with your Site Key. You can also customize settings such as theme, size, color, language and error display.<br>
+    Import the package:
 
     ```dart
     import 'package:arcaptcha/arcaptcha.dart';
     ```
-    then 
+    Then initialize ARCaptcha: 
 
     ```dart
     Arcaptcha.init(
@@ -34,7 +39,7 @@ To use the `arcaptcha` plugin in your Flutter project, follow these steps:
         size: "normal",             // Optional. Set size of the widget. Options: 'normal' | 'invisible'. Default is 'normal'.
     );
     ```
-3. **Display ARcaptcha**<br>
+3. **Display ARCaptcha**<br>
     To display the captcha, use the Arcaptcha.show() method. This will open the captcha in a WebView.
     ```dart 
     final result = await Arcaptcha.show(context);
