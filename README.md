@@ -21,7 +21,7 @@ To use the `arcaptcha` plugin in your Flutter project, follow these steps:
     ```bash
     flutter pub get
     ```
-    Before using the ARCaptcha widget, you need to import the package and initialize it with your Site Key. You can also customize settings such as theme, size, color, language and error display.<br>
+    Before using the ARCaptcha widget, you need to import the package and initialize it with your Site Key. You can also customize settings such as theme, size, color, language, error display and domain.<br>
     Import the package:
 
     ```dart
@@ -32,6 +32,7 @@ To use the `arcaptcha` plugin in your Flutter project, follow these steps:
     ```dart
     Arcaptcha.init(
         siteKey: "<your site key>", // Required. Your public API site key.
+        domain: "yourdomain.com"    // Optional. Set the domain. Defaults to localhost
         theme: "light",             // Optional. Set the theme of widget. Defualts to light
         color: "blue",              // Optional. Set color of every colored element in widget.
         errorPrint: "1",            // Optional. Enable error messages at the bottom of the checkbox.
@@ -80,4 +81,5 @@ The only way to configure ARCaptcha is to set custom attributes on the ARCaptcha
 | data-color | color | color name or hex code | Optional. Set color of every colored element in widget. |
 | data-error-print | error_print | 0 or 1 | Optional. Disable or enable error messages at the bottom of checkbox. Defaults to 0(enabled) |
 | data-lang | lang | en or fa | Optional. Set language of widget . Defaults to fa |
+| domain | domain | yourdomain.com | Optional. Set your website domain. Defaults to localhost |
 
