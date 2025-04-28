@@ -79,6 +79,20 @@ class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
         </head>
         <body>
 
+        <!-- Loader -->
+        <div id="loader" style="
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        ">
+          <span class="loader"></span>
+        </div>
+
         <!-- Arcaptcha widget -->
         <div class="arcaptcha"
           data-site-key="$_siteKey"
@@ -149,10 +163,10 @@ class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
           const checkInterval = setInterval(() => {
             if (typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function') {
               clearInterval(checkInterval);
-              // const loader = document.getElementById('loader');
-              // if (loader) {
-              //   loader.style.display = 'none';
-              // }
+              const loader = document.getElementById('loader');
+              if (loader) {
+                loader.style.display = 'none';
+              }
             }
           }, 50);
 
@@ -164,10 +178,10 @@ class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
                     arcaptcha.execute();
                     post('execute-called');
 
-                    // const loader = document.getElementById('loader');
-                    // if (loader) {
-                    //   loader.style.display = 'none';
-                    // }
+                    const loader = document.getElementById('loader');
+                    if (loader) {
+                      loader.style.display = 'none';
+                    }
 
                   } catch (err) {
                     onError('Arcaptcha execute failed: ' + err.toString());
