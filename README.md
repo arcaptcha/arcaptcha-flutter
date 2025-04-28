@@ -46,14 +46,14 @@ To use the `arcaptcha` plugin in your Flutter project, follow these steps:
         ```plaintext
         flutter: CAPTCHA result: 910036544655114230735492473541
         ```
-        The token is returned and printed (you can use this token for verification).
+
     2. Captcha Error: <br>
     If there is any error while solving the captcha (e.g., incorrect answer, invalid site key, etc.), an error message will be returned. The error contains a code and a message indicating what went wrong.<br>
     Example:
         ```plaintext
         flutter: Arcaptcha error: {code: 203, message: answer-wrong-error}
         ```
-        The token is returned and printed (you can use this token for verification).
+
     3. User Cancels or Skips the Captcha: <br>
     f the user decides not to solve the captcha and exits the widget without completing it, the result will be null, indicating that the captcha was not solved.<br>
     Example:
