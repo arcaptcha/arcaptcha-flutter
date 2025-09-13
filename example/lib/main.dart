@@ -28,7 +28,7 @@ class ArcaptchaHome extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () async {
             Arcaptcha.init(
-              siteKey: 'd6ggpvy684',
+              siteKey: 'Your site key',
               theme: 'dark',
               lang: 'en',
               // color: 'red',
