@@ -77,14 +77,14 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script src="https://widget.arcaptcha.ir/1/api.js?domain=${_domain}" async defer></script>
         </head>
-        <body>
+        <body style="background: transparent; margin: 0; padding: 0;">
 
         <!-- Loader -->
         <div id="loader" style="
           position: fixed;
           top: 0; left: 0;
           width: 100%; height: 100%;
-          background: white;
+          background: transparent;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -116,6 +116,7 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
             text-indent: -9999em;
             animation: mulShdSpin 1.1s infinite ease;
             transform: translateZ(0);
+            background: transparent !important;
           }
           @keyframes mulShdSpin {
             0%, 100% {
@@ -200,6 +201,7 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
 
     _controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(Colors.transparent)
     ..addJavaScriptChannel(
       'Captcha',
       onMessageReceived: (message) {
@@ -230,35 +232,16 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.7,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Arcaptcha',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: WebViewWidget(controller: _controller),
-            ),
-          ],
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.7,
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: WebViewWidget(controller: _controller),
         ),
       ),
     );
