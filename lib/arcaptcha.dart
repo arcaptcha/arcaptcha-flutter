@@ -147,6 +147,10 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
         </style>
 
         <script>
+          // Flag to track if arcaptcha is ready with execute method
+          let arcaptchaReady = false;
+          let executeInterval = null;
+
           function post(type, payload = null) {
             if (window.Captcha) {
               Captcha.postMessage(JSON.stringify({ type, payload }));
@@ -161,8 +165,15 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
             post('error', error);
           }
 
+          // Check if arcaptcha is ready and has execute method
+          function checkArcaptchaReady() {
+            return typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function';
+          }
+
+          // Initial check interval to set the flag when arcaptcha is ready
           const checkInterval = setInterval(() => {
-            if (typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function') {
+            if (checkArcaptchaReady()) {
+              arcaptchaReady = true;
               clearInterval(checkInterval);
               const loader = document.getElementById('loader');
               if (loader) {
@@ -173,8 +184,15 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
 
           window.addEventListener('message', (event) => {
             if (event.data === 'executeCaptcha') {
-              setTimeout(() => {
-                if (typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function') {
+              // Clear any existing execute interval
+              if (executeInterval) {
+                clearInterval(executeInterval);
+              }
+
+              // Start interval to check flag and execute when ready
+              executeInterval = setInterval(() => {
+                if (arcaptchaReady && checkArcaptchaReady()) {
+                  clearInterval(executeInterval);
                   try {
                     arcaptcha.execute();
                     post('execute-called');
@@ -187,10 +205,15 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
                   } catch (err) {
                     onError('Arcaptcha execute failed: ' + err.toString());
                   }
+                } else if (!arcaptchaReady) {
+                  // Still waiting for arcaptcha to be ready
+                  console.log('Waiting for arcaptcha to be ready...');
                 } else {
-                  onError('Arcaptcha not ready.');
+                  // arcaptcha was ready but now it's not (shouldn't happen normally)
+                  onError('Arcaptcha became unavailable.');
+                  clearInterval(executeInterval);
                 }
-              }, 500);
+              }, 100); // Check every 100ms
             }
           });
         </script> 
