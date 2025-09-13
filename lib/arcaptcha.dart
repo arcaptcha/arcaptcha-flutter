@@ -41,10 +41,10 @@ class Arcaptcha {
     if (_siteKey == null) {
       throw Exception('Arcaptcha not initialized. Call Arcaptcha.init() first.');
     }
-    final token = await Navigator.of(context).push<String>(
-      MaterialPageRoute(
-        builder: (_) => const _ArcaptchaWebView(),
-      ),
+    final token = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const _ArcaptchaDialog(),
     );
     return token;
   }
@@ -56,14 +56,14 @@ class Arcaptcha {
   }
 }
 
-class _ArcaptchaWebView extends StatefulWidget {
-  const _ArcaptchaWebView();
+class _ArcaptchaDialog extends StatefulWidget {
+  const _ArcaptchaDialog();
 
   @override
-  State<_ArcaptchaWebView> createState() => _ArcaptchaWebViewState();
+  State<_ArcaptchaDialog> createState() => _ArcaptchaDialogState();
 }
 
-class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
+class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
   late final WebViewController _controller;
 
   @override
@@ -230,9 +230,37 @@ class _ArcaptchaWebViewState extends State<_ArcaptchaWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Arcaptcha')),
-      body: WebViewWidget(controller: _controller),
+    return Dialog(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.7,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Arcaptcha',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: WebViewWidget(controller: _controller),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
