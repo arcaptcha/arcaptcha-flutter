@@ -147,10 +147,6 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
         </style>
 
         <script>
-          // Flag to track if arcaptcha is ready with execute method
-          let arcaptchaReady = false;
-          let executeInterval = null;
-
           function post(type, payload = null) {
             if (window.Captcha) {
               Captcha.postMessage(JSON.stringify({ type, payload }));
@@ -165,15 +161,8 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
             post('error', error);
           }
 
-          // Check if arcaptcha is ready and has execute method
-          function checkArcaptchaReady() {
-            return typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function';
-          }
-
-          // Initial check interval to set the flag when arcaptcha is ready
           const checkInterval = setInterval(() => {
-            if (checkArcaptchaReady()) {
-              arcaptchaReady = true;
+            if (typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function') {
               clearInterval(checkInterval);
               const loader = document.getElementById('loader');
               if (loader) {
@@ -184,15 +173,8 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
 
           window.addEventListener('message', (event) => {
             if (event.data === 'executeCaptcha') {
-              // Clear any existing execute interval
-              if (executeInterval) {
-                clearInterval(executeInterval);
-              }
-
-              // Start interval to check flag and execute when ready
-              executeInterval = setInterval(() => {
-                if (arcaptchaReady && checkArcaptchaReady()) {
-                  clearInterval(executeInterval);
+              setTimeout(() => {
+                if (typeof arcaptcha !== 'undefined' && typeof arcaptcha.execute === 'function') {
                   try {
                     arcaptcha.execute();
                     post('execute-called');
@@ -205,15 +187,10 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
                   } catch (err) {
                     onError('Arcaptcha execute failed: ' + err.toString());
                   }
-                } else if (!arcaptchaReady) {
-                  // Still waiting for arcaptcha to be ready
-                  console.log('Waiting for arcaptcha to be ready...');
                 } else {
-                  // arcaptcha was ready but now it's not (shouldn't happen normally)
-                  onError('Arcaptcha became unavailable.');
-                  clearInterval(executeInterval);
+                  onError('Arcaptcha not ready.');
                 }
-              }, 100); // Check every 100ms
+              }, 500);
             }
           });
         </script> 
@@ -255,16 +232,29 @@ class _ArcaptchaDialogState extends State<_ArcaptchaDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: WebViewWidget(controller: _controller),
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.7,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: WebViewWidget(controller: _controller),
+            ),
+          ],
         ),
       ),
     );

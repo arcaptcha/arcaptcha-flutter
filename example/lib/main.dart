@@ -11,124 +11,49 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ArCaptcha Demo',
-      home: const ArCaptchaHome(),
+      title: 'Arcaptcha Demo',
+      home: const ArcaptchaHome(),
     );
   }
 }
 
-class ArCaptchaHome extends StatelessWidget {
-  const ArCaptchaHome({super.key});
+class ArcaptchaHome extends StatelessWidget {
+  const ArcaptchaHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ArCaptcha Example')),
+      appBar: AppBar(title: const Text('Arcaptcha Example')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                // Initialize with your site key
-                Arcaptcha.init(
-                  siteKey: 'd6ggpvy684',
-                  theme: 'dark',
-                  lang: 'en',
-                  size: 'normal', // visible captcha
-                );
+        child: ElevatedButton(
+          onPressed: () async {
+            Arcaptcha.init(
+              siteKey: 'd6ggpvy684',
+              theme: 'dark',
+              lang: 'en',
+              // color: 'red',
+              size: 'invisible'
+            );
 
-                final result = await Arcaptcha.show(context);
-                debugPrint("Captcha result: $result");
-                
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('CAPTCHA Token'),
-                      content: Text(result ?? 'No token received'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
+            final result = await Arcaptcha.show(context);
+            print('CAPTCHA result: $result');
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('CAPTCHA Token'),
+                  content: Text(result ?? 'No token received'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
                     ),
-                  );
-                }
-              },
-              child: const Text('Show Captcha (Visible)'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                // Initialize with invisible captcha
-                Arcaptcha.init(
-                  siteKey: 'd6ggpvy684',
-                  theme: 'light',
-                  lang: 'en',
-                  size: 'invisible', // invisible captcha
-                );
-
-                final result = await Arcaptcha.show(context);
-                debugPrint("Invisible Captcha result: $result");
-                
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('CAPTCHA Token'),
-                      content: Text(result ?? 'No token received'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-              child: const Text('Show Captcha (Invisible)'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                // Initialize and then execute programmatically
-                Arcaptcha.init(
-                  siteKey: 'd6ggpvy684',
-                  theme: 'dark',
-                  lang: 'en',
-                  size: 'invisible',
-                );
-
-                // Show the captcha first
-                final result = await Arcaptcha.show(context);
-                
-                // Then execute it programmatically
-                await Arcaptcha.execute();
-                
-                debugPrint("Programmatic execution result: $result");
-                
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('CAPTCHA Token'),
-                      content: Text(result ?? 'No token received'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-              child: const Text('Show Captcha + Execute'),
-            ),
-          ],
+                  ],
+                ),
+              );
+            }
+          },
+          child: const Text('Verify Captcha'),
         ),
       ),
     );
